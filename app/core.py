@@ -219,9 +219,3 @@ class FeedbackClassifier:
                 output.append({"category": category if confidence >= threshold else "uncertain",
                                "confidence": confidence, "scores": scores})
         return output
-
-
-# --- Milestone 5: Build a simple Streamlit app to input comments and show classifications.
-# Hint: Integrate your inference function into a basic Streamlit UI.
-def milestone_5():  # TODO(milestone 5)
-    raise NotImplementedError("TODO(milestone 5)")

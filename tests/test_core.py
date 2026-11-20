@@ -1,6 +1,4 @@
 """Regression tests for retail feedback tagging."""
-import pytest
-
 def test_dataset_categories_format_and_stratified_groups():
     from app.core import CATEGORIES, format_prompt, format_record, split_feedback
     from app.storage import load_feedback
@@ -100,8 +98,31 @@ def test_evaluation_reports_zero_support_labels():
     assert result["confusion_matrix"][1][0] == 1
 
 
-# Milestone 5: Build a simple Streamlit app to input comments and show classifications.
-@pytest.mark.skip(reason="remove this line when you start milestone 5")
-def test_milestone_5():
-    raise NotImplementedError("write the test for milestone 5")
+def test_streamlit_missing_model_and_clickable_examples(tmp_path, monkeypatch):
+    from pathlib import Path
 
+    from streamlit.testing.v1 import AppTest
+
+    entry = Path("app/main.py").resolve()
+    monkeypatch.chdir(tmp_path)
+    page = AppTest.from_file(str(entry)).run()
+    assert not page.exception
+    assert page.title[0].value == "Customer Feedback Analyzer"
+    assert "python -m app.train" in page.info[0].value
+    assert page.button[-1].disabled
+    page.button[0].click().run()
+    assert page.text_area[0].value
+
+
+def test_ui_classification_and_csv(tiny_pair):
+    from app.core import CATEGORIES, FeedbackClassifier, extend_categories
+    from app.ui_data import classify_comments, parse_comments, results_csv
+
+    model, tokenizer = tiny_pair
+    extend_categories(model, tokenizer)
+    inputs = parse_comments(" Broken zipper\n\n =1+2\n")
+    assert inputs == ["Broken zipper", "=1+2"]
+    rows = classify_comments(FeedbackClassifier(model, tokenizer), inputs, 0)
+    assert len(rows) == 2 and all(row["Category"] in CATEGORIES for row in rows)
+    exported = results_csv(rows)
+    assert "Comment,Category,Confidence" in exported and "'=1+2" in exported
