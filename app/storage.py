@@ -24,3 +24,11 @@ class Store:
 
     def all(self) -> dict:
         return dict(sorted(self._read().items()))
+
+
+def load_feedback(path: Path = Path("data/feedback.jsonl")) -> list["Feedback"]:
+    """Read synthetic labeled feedback from JSON Lines."""
+    from app.core import Feedback
+
+    return [Feedback(**json.loads(line)) for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()]

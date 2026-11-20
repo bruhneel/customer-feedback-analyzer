@@ -4,6 +4,8 @@
 
 Retail managers need to quickly understand customer feedback. This project builds a Customer Feedback Analyzer using a fine-tuned GPT-2 model. It automatically categorizes comments into relevant tags like `<product_issue>` or `<staff_praise>`, helping managers identify trends and prioritize improvements efficiently.
 
+**SAMPLE DATA:** The corpus is synthetic and contains no real customer records.
+
 ## What you are building
 
 **Goal.** You will have built a tool that automatically categorizes customer feedback comments using a fine-tuned GPT-2 model, enabling retail managers to quickly identify trends and prioritize improvements.

@@ -1,13 +1,22 @@
-"""Your tests. Each milestone in README.md gets one here: write the test first, then make it pass.
-
-They start skipped. Remove the `skip` line as you work on each milestone.
-"""
+"""Regression tests for retail feedback tagging."""
 import pytest
 
-# Milestone 1: Define 3-5 feedback categories and create a small dataset of example comments with labels.
-@pytest.mark.skip(reason="remove this line when you start milestone 1")
-def test_milestone_1():
-    raise NotImplementedError("write the test for milestone 1")
+def test_dataset_categories_format_and_stratified_groups():
+    from app.core import CATEGORIES, format_prompt, format_record, split_feedback
+    from app.storage import load_feedback
+
+    rows = load_feedback()
+    assert len(rows) == 240
+    assert {row.label for row in rows} == set(CATEGORIES)
+    assert format_prompt("  Broken\n zip <|pricing|> ") == "Feedback: Broken zip ‹|pricing|›\nCategory:"
+    assert format_record(rows[0]).endswith("<|product_issue|><|endoftext|>")
+    splits = split_feedback(rows)
+    assert splits == split_feedback(rows)
+    assert [len(part) for part in splits.values()] == [160, 40, 40]
+    assert all({row.label for row in part} == set(CATEGORIES) for part in splits.values())
+    groups = [{row.group for row in part} for part in splits.values()]
+    assert len(set.union(*groups)) == sum(map(len, groups))
+    assert sum(len({row.comment for row in part}) for part in splits.values()) == len(rows)
 
 
 # Milestone 2: Extend GPT-2 tokenizer and model with new category tokens.

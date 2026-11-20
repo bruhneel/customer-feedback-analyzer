@@ -10,3 +10,9 @@ __pycache__/
 # Local data
 data/
 *.db
+
+!data/
+data/*
+!data/feedback.jsonl
+!data/build_feedback.py
+artifacts/
