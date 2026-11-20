@@ -154,6 +154,78 @@
           0
         ]
       ]
+    },
+    "TF-IDF logistic regression": {
+      "accuracy": 0.25,
+      "per_class": {
+        "product_issue": {
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1-score": 0.5,
+          "support": 8.0
+        },
+        "staff_praise": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "pricing": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "delivery_or_stock": {
+          "precision": 0.2,
+          "recall": 0.375,
+          "f1-score": 0.2608695652173913,
+          "support": 8.0
+        },
+        "store_experience": {
+          "precision": 0.6,
+          "recall": 0.375,
+          "f1-score": 0.46153846153846156,
+          "support": 8.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          4,
+          0,
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          8,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          4,
+          2
+        ],
+        [
+          0,
+          1,
+          4,
+          3,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0,
+          3
+        ]
+      ]
     }
   },
   "examples": [
@@ -223,6 +295,7 @@
       "comment": "The fitting rooms were noticeably dirty. There was a pile of old tags on the floor.",
       "group": "store_experience-03",
       "actual": "store_experience",
+      "tfidf_category": "staff_praise",
       "category": "store_experience",
       "confidence": 0.5902913808822632,
       "scores": {
@@ -237,6 +310,7 @@
       "comment": "idk if anyone else noticed but the kettle cost more at the register than on the shelf ??",
       "group": "pricing-03",
       "actual": "pricing",
+      "tfidf_category": "product_issue",
       "category": "pricing",
       "confidence": 0.9992714524269104,
       "scores": {
@@ -251,6 +325,7 @@
       "comment": "The moisturizer arrived sealed but smelled rancid. I did not want to use it.",
       "group": "product_issue-09",
       "actual": "product_issue",
+      "tfidf_category": "product_issue",
       "category": "product_issue",
       "confidence": 0.9999998807907104,
       "scores": {
@@ -265,6 +340,7 @@
       "comment": "Quick feedback: the kettle cost more at the register than on the shelf!",
       "group": "pricing-03",
       "actual": "pricing",
+      "tfidf_category": "product_issue",
       "category": "pricing",
       "confidence": 0.9999529123306274,
       "scores": {
@@ -279,6 +355,7 @@
       "comment": "It showed plenty available when I paid. Main thing: the website cancelled my order because the size sold out.",
       "group": "delivery_or_stock-05",
       "actual": "delivery_or_stock",
+      "tfidf_category": "delivery_or_stock",
       "category": "pricing",
       "confidence": 0.8512140512466431,
       "scores": {
@@ -293,6 +370,7 @@
       "comment": "The price is hard to justify for such a tiny refill. The larger pack actually works out cheaper.",
       "group": "pricing-06",
       "actual": "pricing",
+      "tfidf_category": "delivery_or_stock",
       "category": "pricing",
       "confidence": 0.8547192811965942,
       "scores": {
@@ -307,6 +385,7 @@
       "comment": "I left feeling heard. Main thing: the returns clerk went out of their way to explain my options.",
       "group": "staff_praise-03",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.9997866749763489,
       "scores": {
@@ -321,6 +400,7 @@
       "comment": "Quick feedback: the returns clerk went out of their way to explain my options!",
       "group": "staff_praise-03",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.9982642531394958,
       "scores": {
@@ -335,6 +415,7 @@
       "comment": "There was a pile of old tags on the floor. Main thing: the fitting rooms were noticeably dirty.",
       "group": "store_experience-03",
       "actual": "store_experience",
+      "tfidf_category": "product_issue",
       "category": "store_experience",
       "confidence": 0.9975634813308716,
       "scores": {
@@ -349,6 +430,7 @@
       "comment": "idk if anyone else noticed but the fitting rooms were noticeably dirty ??",
       "group": "store_experience-03",
       "actual": "store_experience",
+      "tfidf_category": "store_experience",
       "category": "product_issue",
       "confidence": 0.9103739261627197,
       "scores": {
@@ -363,6 +445,7 @@
       "comment": "idk if anyone else noticed but the price is hard to justify for such a tiny refill ??",
       "group": "pricing-06",
       "actual": "pricing",
+      "tfidf_category": "store_experience",
       "category": "pricing",
       "confidence": 0.9639735817909241,
       "scores": {
@@ -377,6 +460,7 @@
       "comment": "The shelf label and receipt don't match. Main thing: the kettle cost more at the register than on the shelf.",
       "group": "pricing-03",
       "actual": "pricing",
+      "tfidf_category": "delivery_or_stock",
       "category": "pricing",
       "confidence": 0.9947720170021057,
       "scores": {
@@ -391,6 +475,7 @@
       "comment": "I did not want to use it. Main thing: the moisturizer arrived sealed but smelled rancid.",
       "group": "product_issue-09",
       "actual": "product_issue",
+      "tfidf_category": "product_issue",
       "category": "product_issue",
       "confidence": 0.9999990463256836,
       "scores": {
@@ -405,6 +490,7 @@
       "comment": "The expedited package took longer than regular shipping. I paid the upgrade to get it before the weekend.",
       "group": "delivery_or_stock-08",
       "actual": "delivery_or_stock",
+      "tfidf_category": "pricing",
       "category": "delivery_or_stock",
       "confidence": 0.9897139072418213,
       "scores": {
@@ -419,6 +505,7 @@
       "comment": "The larger pack actually works out cheaper. Main thing: the price is hard to justify for such a tiny refill.",
       "group": "pricing-06",
       "actual": "pricing",
+      "tfidf_category": "delivery_or_stock",
       "category": "pricing",
       "confidence": 0.7341729402542114,
       "scores": {
@@ -433,6 +520,7 @@
       "comment": "idk if anyone else noticed but the website cancelled my order because the size sold out ??",
       "group": "delivery_or_stock-05",
       "actual": "delivery_or_stock",
+      "tfidf_category": "staff_praise",
       "category": "store_experience",
       "confidence": 0.9289599657058716,
       "scores": {
@@ -447,6 +535,7 @@
       "comment": "Quick feedback: the team at the register handled a mix-up without blaming anyone!",
       "group": "staff_praise-10",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "store_experience",
       "confidence": 0.9571624398231506,
       "scores": {
@@ -461,6 +550,7 @@
       "comment": "Quick feedback: the moisturizer arrived sealed but smelled rancid!",
       "group": "product_issue-09",
       "actual": "product_issue",
+      "tfidf_category": "pricing",
       "category": "product_issue",
       "confidence": 0.9999991655349731,
       "scores": {
@@ -475,6 +565,7 @@
       "comment": "idk if anyone else noticed but the moisturizer arrived sealed but smelled rancid ??",
       "group": "product_issue-09",
       "actual": "product_issue",
+      "tfidf_category": "pricing",
       "category": "product_issue",
       "confidence": 0.9999998807907104,
       "scores": {
@@ -489,6 +580,7 @@
       "comment": "Quick feedback: the fitting rooms were noticeably dirty!",
       "group": "store_experience-03",
       "actual": "store_experience",
+      "tfidf_category": "store_experience",
       "category": "product_issue",
       "confidence": 0.9376323223114014,
       "scores": {
@@ -503,6 +595,7 @@
       "comment": "The zipper on the daypack came apart. Only used it for the morning commute.",
       "group": "product_issue-03",
       "actual": "product_issue",
+      "tfidf_category": "pricing",
       "category": "product_issue",
       "confidence": 0.9999974966049194,
       "scores": {
@@ -517,6 +610,7 @@
       "comment": "I paid the upgrade to get it before the weekend. Main thing: the expedited package took longer than regular shipping.",
       "group": "delivery_or_stock-08",
       "actual": "delivery_or_stock",
+      "tfidf_category": "pricing",
       "category": "delivery_or_stock",
       "confidence": 0.98195481300354,
       "scores": {
@@ -531,6 +625,7 @@
       "comment": "The kettle cost more at the register than on the shelf. The shelf label and receipt don't match.",
       "group": "pricing-03",
       "actual": "pricing",
+      "tfidf_category": "delivery_or_stock",
       "category": "product_issue",
       "confidence": 0.8155409097671509,
       "scores": {
@@ -545,6 +640,7 @@
       "comment": "Quick feedback: the zipper on the daypack came apart!",
       "group": "product_issue-03",
       "actual": "product_issue",
+      "tfidf_category": "product_issue",
       "category": "product_issue",
       "confidence": 0.9999254941940308,
       "scores": {
@@ -559,6 +655,7 @@
       "comment": "idk if anyone else noticed but the zipper on the daypack came apart ??",
       "group": "product_issue-03",
       "actual": "product_issue",
+      "tfidf_category": "product_issue",
       "category": "product_issue",
       "confidence": 0.9999774694442749,
       "scores": {
@@ -573,6 +670,7 @@
       "comment": "Quick feedback: the department signs pointed in opposite directions!",
       "group": "store_experience-04",
       "actual": "store_experience",
+      "tfidf_category": "store_experience",
       "category": "staff_praise",
       "confidence": 0.9799041748046875,
       "scores": {
@@ -587,6 +685,7 @@
       "comment": "Quick feedback: the expedited package took longer than regular shipping!",
       "group": "delivery_or_stock-08",
       "actual": "delivery_or_stock",
+      "tfidf_category": "pricing",
       "category": "delivery_or_stock",
       "confidence": 0.9998452663421631,
       "scores": {
@@ -601,6 +700,7 @@
       "comment": "Really professional. Main thing: the team at the register handled a mix-up without blaming anyone.",
       "group": "staff_praise-10",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.9987320303916931,
       "scores": {
@@ -615,6 +715,7 @@
       "comment": "Only used it for the morning commute. Main thing: the zipper on the daypack came apart.",
       "group": "product_issue-03",
       "actual": "product_issue",
+      "tfidf_category": "pricing",
       "category": "product_issue",
       "confidence": 0.999570906162262,
       "scores": {
@@ -629,6 +730,7 @@
       "comment": "The department signs pointed in opposite directions. I spent ten minutes trying to find cookware.",
       "group": "store_experience-04",
       "actual": "store_experience",
+      "tfidf_category": "pricing",
       "category": "staff_praise",
       "confidence": 0.5259681940078735,
       "scores": {
@@ -643,6 +745,7 @@
       "comment": "idk if anyone else noticed but the department signs pointed in opposite directions ??",
       "group": "store_experience-04",
       "actual": "store_experience",
+      "tfidf_category": "product_issue",
       "category": "staff_praise",
       "confidence": 0.7447267174720764,
       "scores": {
@@ -657,6 +760,7 @@
       "comment": "idk if anyone else noticed but the team at the register handled a mix-up without blaming anyone ??",
       "group": "staff_praise-10",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "store_experience",
       "confidence": 0.615401566028595,
       "scores": {
@@ -671,6 +775,7 @@
       "comment": "Quick feedback: the website cancelled my order because the size sold out!",
       "group": "delivery_or_stock-05",
       "actual": "delivery_or_stock",
+      "tfidf_category": "delivery_or_stock",
       "category": "store_experience",
       "confidence": 0.9523305296897888,
       "scores": {
@@ -685,6 +790,7 @@
       "comment": "Quick feedback: the price is hard to justify for such a tiny refill!",
       "group": "pricing-06",
       "actual": "pricing",
+      "tfidf_category": "store_experience",
       "category": "pricing",
       "confidence": 0.6820245981216431,
       "scores": {
@@ -699,6 +805,7 @@
       "comment": "idk if anyone else noticed but the returns clerk went out of their way to explain my options ??",
       "group": "staff_praise-03",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.9943557977676392,
       "scores": {
@@ -713,6 +820,7 @@
       "comment": "idk if anyone else noticed but the expedited package took longer than regular shipping ??",
       "group": "delivery_or_stock-08",
       "actual": "delivery_or_stock",
+      "tfidf_category": "pricing",
       "category": "delivery_or_stock",
       "confidence": 0.9996722936630249,
       "scores": {
@@ -727,6 +835,7 @@
       "comment": "The returns clerk went out of their way to explain my options. I left feeling heard.",
       "group": "staff_praise-03",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.9997217059135437,
       "scores": {
@@ -741,6 +850,7 @@
       "comment": "The website cancelled my order because the size sold out. It showed plenty available when I paid.",
       "group": "delivery_or_stock-05",
       "actual": "delivery_or_stock",
+      "tfidf_category": "delivery_or_stock",
       "category": "store_experience",
       "confidence": 0.5720054507255554,
       "scores": {
@@ -755,6 +865,7 @@
       "comment": "I spent ten minutes trying to find cookware. Main thing: the department signs pointed in opposite directions.",
       "group": "store_experience-04",
       "actual": "store_experience",
+      "tfidf_category": "pricing",
       "category": "product_issue",
       "confidence": 0.4302980899810791,
       "scores": {
@@ -769,6 +880,7 @@
       "comment": "The team at the register handled a mix-up without blaming anyone. Really professional.",
       "group": "staff_praise-10",
       "actual": "staff_praise",
+      "tfidf_category": "delivery_or_stock",
       "category": "staff_praise",
       "confidence": 0.7934694290161133,
       "scores": {

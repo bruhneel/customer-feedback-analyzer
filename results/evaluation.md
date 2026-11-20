@@ -6,6 +6,7 @@
 | --- | ---: |
 | DistilGPT2 | 67.5% |
 | Training majority | 20.0% |
+| TF-IDF logistic regression | 25.0% |
 
 ## DistilGPT2
 
@@ -46,6 +47,26 @@ Confusion matrix, rows are actual and columns are predicted.
 | pricing | 8 | 0 | 0 | 0 | 0 |
 | delivery_or_stock | 8 | 0 | 0 | 0 | 0 |
 | store_experience | 8 | 0 | 0 | 0 | 0 |
+
+## TF-IDF logistic regression
+
+| Category | Precision | Recall | F1 | Support |
+| --- | ---: | ---: | ---: | ---: |
+| product_issue | 0.500 | 0.500 | 0.500 | 8 |
+| staff_praise | 0.000 | 0.000 | 0.000 | 8 |
+| pricing | 0.000 | 0.000 | 0.000 | 8 |
+| delivery_or_stock | 0.200 | 0.375 | 0.261 | 8 |
+| store_experience | 0.600 | 0.375 | 0.462 | 8 |
+
+Confusion matrix, rows are actual and columns are predicted.
+
+| Actual / predicted | product_issue | staff_praise | pricing | delivery_or_stock | store_experience |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| product_issue | 4 | 0 | 4 | 0 | 0 |
+| staff_praise | 0 | 0 | 0 | 8 | 0 |
+| pricing | 2 | 0 | 0 | 4 | 2 |
+| delivery_or_stock | 0 | 1 | 4 | 3 | 0 |
+| store_experience | 2 | 1 | 2 | 0 | 3 |
 
 ## Novel demonstration inputs
 

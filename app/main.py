@@ -1,5 +1,6 @@
 """Streamlit interface for local GPT-2 feedback tagging."""
 from collections import Counter
+from datetime import date
 from pathlib import Path
 import sys
 
@@ -11,7 +12,7 @@ if str(ROOT) not in sys.path:
 
 from app.core import CATEGORIES, FeedbackClassifier
 from app.llm import load_classifier
-from app.ui_data import classify_comments, parse_comments, results_csv
+from app.ui_data import classify_comments, parse_comments, parse_upload, results_csv, weekly_issues
 
 MODEL = Path("artifacts/model")
 EXAMPLES = {
@@ -55,18 +56,24 @@ def render() -> None:
     for column, (title, example) in zip(st.columns(3), EXAMPLES.items(), strict=True):
         column.button(f"Try {title.lower()}", on_click=add_example, args=(example,))
     text = st.text_area("Feedback comments, one per line", key="comments", height=150)
+    upload = st.file_uploader("Upload feedback CSV", type=["csv"],
+                              help="Required column: comment. Optional date column: YYYY-MM-DD.")
     if st.button("Classify", type="primary", disabled=revision is None):
-        comments = parse_comments(text)
-        if not comments:
-            st.warning("Enter at least one feedback comment.")
-        else:
-            try:
-                with st.spinner("Classifying locally…"):
-                    classifier = get_classifier(str(MODEL), revision)
-                    rows = classify_comments(classifier, comments, threshold)
-                    st.session_state["result"] = (rows, threshold)
-            except (OSError, ValueError, RuntimeError) as exc:
-                st.error(f"Classification failed: {exc}")
+        try:
+            today = date.today()
+            records = [(comment, today) for comment in parse_comments(text)]
+            if upload:
+                records.extend(parse_upload(upload.getvalue(), today))
+            if not records:
+                raise ValueError("Enter or upload at least one feedback comment.")
+            with st.spinner("Classifying locally…"):
+                classifier = get_classifier(str(MODEL), revision)
+                rows = classify_comments(classifier, [comment for comment, _ in records], threshold)
+                for row, (_, received) in zip(rows, records, strict=True):
+                    row["Date"] = received.isoformat()
+                st.session_state["result"] = (rows, threshold)
+        except (OSError, ValueError, RuntimeError) as exc:
+            st.error(f"Classification failed: {exc}")
     if "result" not in st.session_state:
         return
     rows, applied_threshold = st.session_state["result"]
@@ -78,6 +85,14 @@ def render() -> None:
     st.bar_chart({"Category": list(counts), "Count": list(counts.values())},
                  x="Category", y="Count", horizontal=True)
     st.download_button("Download results CSV", results_csv(rows), "feedback-results.csv", "text/csv")
+    with st.expander("Top issues this week", expanded=True):
+        st.caption("Current batch only, Monday through today. Excludes staff praise and uncertain rows.")
+        counts = weekly_issues(rows, date.today())
+        if counts:
+            st.dataframe([{"Category": label, "Count": count} for label, count in counts],
+                         hide_index=True)
+        else:
+            st.info("No classified issue categories for this week in the current batch.")
 
 
 if __name__ == "__main__":

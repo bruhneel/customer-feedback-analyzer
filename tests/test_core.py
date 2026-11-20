@@ -126,3 +126,27 @@ def test_ui_classification_and_csv(tiny_pair):
     assert len(rows) == 2 and all(row["Category"] in CATEGORIES for row in rows)
     exported = results_csv(rows)
     assert "Comment,Category,Confidence" in exported and "'=1+2" in exported
+
+
+def test_upload_dates_and_weekly_view():
+    from datetime import date
+
+    import pytest
+
+    from app.ui_data import parse_upload, weekly_issues
+
+    today = date(2026, 11, 20)
+    rows = parse_upload(b'comment,date\n"broken, again",2026-11-16\nstaff were great,\n', today)
+    assert rows == [("broken, again", date(2026, 11, 16)), ("staff were great", today)]
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        parse_upload(b"comment,date\nnot stocked,15-11-26\n", today)
+    with pytest.raises(ValueError, match="comment"):
+        parse_upload(b"text,date\ndata,2026-11-16\n", today)
+    recs = [
+        {"Category": "product_issue", "Date": "2026-11-16"},
+        {"Category": "pricing", "Date": "2026-11-15"},
+        {"Category": "pricing", "Date": "2026-11-21"},
+        {"Category": "staff_praise", "Date": "2026-11-20"},
+        {"Category": "uncertain", "Date": "2026-11-20"},
+    ]
+    assert weekly_issues(recs, today) == [("product_issue", 1)]

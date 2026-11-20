@@ -32,6 +32,10 @@ Use `HF_HUB_OFFLINE=1 pytest -q` for download-free tests with a tiny random GPT-
 4. **Inference.** Build the same prompt, preserve the `Category:` suffix when truncating, and take next-token logits at the last real prompt token. Softmax is applied only over the five category IDs. The top score falls back to `uncertain` below the chosen threshold.
 5. **Streamlit.** Paste one comment per line or click a sample. Classify to see a table, count chart and CSV download. The sidebar controls the confidence threshold and shows whether the checkpoint exists.
 
+## CSV and weekly summary
+
+Upload a UTF-8 CSV with a `comment` column and optionally a `date` column using `YYYY-MM-DD`. Pasted comments and undated CSV rows use today's local date. The weekly view counts the current batch from Monday through today, excluding `staff_praise` and `uncertain`. It counts categories that may contain issues and does not infer whether a comment is positive or negative. The result CSV includes the date used for each row.
+
 ## Held-out results
 
 DistilGPT2 achieved **67.5%** accuracy against **20.0%** for the training-majority baseline. In a balanced training set, the tie goes to the first configured label, `product_issue`.
@@ -45,6 +49,8 @@ DistilGPT2 achieved **67.5%** accuracy against **20.0%** for the training-majori
 | store_experience | 0.267 | 0.000 |
 
 The most common test confusions were `store_experience` labeled `staff_praise` (3), `store_experience` labeled `product_issue` (3), `delivery_or_stock` labeled `store_experience` (3), `staff_praise` labeled `store_experience` (2). The [evaluation report](results/evaluation.md) includes precision, recall, confusion matrices and the individual predictions in [JSON](results/evaluation.json).
+
+A word unigram/bigram TF-IDF model with logistic regression trained on exactly the same training split achieved **25.0%**. Its per-class metrics and predictions are in the same evaluation reports. This comparison is specific to the small grouped synthetic split.
 
 ### Novel example comments
 

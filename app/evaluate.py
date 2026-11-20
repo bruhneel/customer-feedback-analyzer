@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Sequence
 
 import torch
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 from app.core import CATEGORIES, split_feedback
@@ -72,6 +75,12 @@ def evaluate(model_path: Path, dataset: Path) -> dict:
     train, test = splits["train"], splits["test"]
     counts = Counter(row.label for row in train)
     majority = max(CATEGORIES, key=counts.__getitem__)
+    tfidf = make_pipeline(
+        TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True),
+        LogisticRegression(C=4.0, max_iter=500, random_state=seed),
+    )
+    tfidf.fit([row.comment for row in train], [row.label for row in train])
+    lexical = tfidf.predict([row.comment for row in test]).tolist()
     outputs = classifier.classify_batch([row.comment for row in test])
     actual = [row.label for row in test]
     predicted = [row["category"] for row in outputs]
@@ -81,11 +90,13 @@ def evaluate(model_path: Path, dataset: Path) -> dict:
         "seed": seed, "label_order": list(CATEGORIES), "test_count": len(test),
         "test_group_count": len({row.group for row in test}), "training_majority": majority,
         "models": {"DistilGPT2": summarize(actual, predicted),
-                   "Training majority": summarize(actual, [majority] * len(test))},
+                   "Training majority": summarize(actual, [majority] * len(test)),
+                   "TF-IDF logistic regression": summarize(actual, lexical)},
         "examples": examples,
         "test_predictions": [
-            {"comment": row.comment, "group": row.group, "actual": row.label, **prediction}
-            for row, prediction in zip(test, outputs, strict=True)
+            {"comment": row.comment, "group": row.group, "actual": row.label,
+             "tfidf_category": lexical_category, **prediction}
+            for row, prediction, lexical_category in zip(test, outputs, lexical, strict=True)
         ],
     }
 
