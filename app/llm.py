@@ -45,3 +45,16 @@ def load_base(model_name: str = DEFAULT_BASE):
     tokenizer = AutoTokenizer.from_pretrained(model_name, token=False)
     model = AutoModelForCausalLM.from_pretrained(model_name, token=False, use_safetensors=True)
     return model, tokenizer
+
+
+def load_classifier(path: Path):
+    """Load a locally saved GPT-2 tagger and its matching tokenizer."""
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    from app.core import FeedbackClassifier
+
+    if not (path / "config.json").is_file():
+        raise FileNotFoundError("No trained model found. Run python -m app.train first.")
+    tokenizer = AutoTokenizer.from_pretrained(path, local_files_only=True)
+    model = AutoModelForCausalLM.from_pretrained(path, local_files_only=True, use_safetensors=True)
+    return FeedbackClassifier(model, tokenizer)

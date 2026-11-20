@@ -65,10 +65,39 @@ def test_trainer_overfits_tiny_model(tiny_pair, tmp_path):
     assert math.isfinite(train_loss) and math.isfinite(final) and final < initial * 0.6
 
 
-# Milestone 4: Implement an inference function to classify new feedback.
-@pytest.mark.skip(reason="remove this line when you start milestone 4")
-def test_milestone_4():
-    raise NotImplementedError("write the test for milestone 4")
+def test_constrained_inference_batch_threshold_and_truncation(tiny_pair):
+    import pytest
+
+    from app.core import CATEGORIES, FeedbackClassifier, extend_categories, prompt_ids
+
+    model, tokenizer = tiny_pair
+    extend_categories(model, tokenizer)
+    classifier = FeedbackClassifier(model, tokenizer)
+    texts = ["Broken zipper", "Staff helped me " * 5000]
+    outputs = classifier.classify_batch(texts)
+    for text, result in zip(texts, outputs, strict=True):
+        single = classifier.classify(text)
+        assert result["category"] == single["category"] and result["category"] in CATEGORIES
+        assert result["scores"] == pytest.approx(single["scores"], abs=1e-6)
+        assert sum(result["scores"].values()) == pytest.approx(1.0)
+        assert result["confidence"] == max(result["scores"].values())
+    assert classifier.classify(texts[0], threshold=1)["category"] == "uncertain"
+    ids = prompt_ids(tokenizer, texts[1], classifier.max_length)
+    tail = tokenizer.encode("\nCategory:", add_special_tokens=False)
+    assert len(ids) == classifier.max_length - 2 and ids[-len(tail):] == tail
+    with pytest.raises(ValueError, match="nonempty"):
+        classifier.classify("   ")
+    assert classifier.classify_batch([]) == []
+
+
+def test_evaluation_reports_zero_support_labels():
+    from app.evaluate import summarize
+
+    result = summarize(["product_issue", "staff_praise"], ["product_issue", "product_issue"])
+    assert result["accuracy"] == 0.5
+    assert result["per_class"]["product_issue"]["f1-score"] == 2 / 3
+    assert result["per_class"]["pricing"]["support"] == 0
+    assert result["confusion_matrix"][1][0] == 1
 
 
 # Milestone 5: Build a simple Streamlit app to input comments and show classifications.

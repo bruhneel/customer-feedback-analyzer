@@ -2,8 +2,9 @@
 from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
+import math
 import random
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
     from transformers import PreTrainedModel, PreTrainedTokenizerBase
@@ -165,10 +166,59 @@ class FeedbackCollator:
                 "attention_mask": torch.tensor(masks)}
 
 
-# --- Milestone 4: Implement an inference function to classify new feedback.
-# Hint: Adapt the inference pipeline from the drill to generate category tokens.
-def milestone_4():  # TODO(milestone 4)
-    raise NotImplementedError("TODO(milestone 4)")
+class Classification(TypedDict):
+    category: str
+    confidence: float
+    scores: dict[str, float]
+
+
+class FeedbackClassifier:
+    """Restrict GPT-2's next-token scores to the five category IDs."""
+
+    def __init__(self, model: "PreTrainedModel", tokenizer: "PreTrainedTokenizerBase") -> None:
+        self.model = model.eval()
+        self.tokenizer = tokenizer
+        self.ids = category_token_ids(tokenizer)
+        self.max_length = min(
+            getattr(model.config, "feedback_max_length", 96), model.config.max_position_embeddings
+        )
+
+    def classify(self, comment: str, *, threshold: float = 0.0) -> Classification:
+        """Classify one comment with the same inference path as a batch."""
+        return self.classify_batch([comment], threshold=threshold)[0]
+
+    def classify_batch(
+        self, comments: Sequence[str], *, threshold: float = 0.0, batch_size: int = 8
+    ) -> list[Classification]:
+        """Return normalized scores and label low-confidence rows uncertain."""
+        import torch
+
+        if not math.isfinite(threshold) or not 0 <= threshold <= 1 or batch_size < 1:
+            raise ValueError("Confidence threshold must be between 0 and 1, and batch size positive.")
+        output: list[Classification] = []
+        category_names = list(self.ids)
+        device = next(self.model.parameters()).device
+        category_indexes = torch.tensor(list(self.ids.values()), device=device)
+        for start in range(0, len(comments), batch_size):
+            rows = [prompt_ids(self.tokenizer, comment, self.max_length)
+                    for comment in comments[start:start + batch_size]]
+            lengths = torch.tensor([len(row) for row in rows], device=device)
+            width = max(map(len, rows))
+            padded = torch.tensor([
+                row + [self.tokenizer.pad_token_id] * (width - len(row)) for row in rows
+            ], device=device)
+            mask = torch.arange(width, device=device).unsqueeze(0) < lengths.unsqueeze(1)
+            with torch.inference_mode():
+                logits = self.model(input_ids=padded, attention_mask=mask.long(), use_cache=False).logits
+                last = logits[torch.arange(len(rows), device=device), lengths - 1]
+                probabilities = last.index_select(1, category_indexes).float().softmax(dim=-1).tolist()
+            for values in probabilities:
+                scores = dict(zip(category_names, values, strict=True))
+                category = max(scores, key=scores.__getitem__)
+                confidence = scores[category]
+                output.append({"category": category if confidence >= threshold else "uncertain",
+                               "confidence": confidence, "scores": scores})
+        return output
 
 
 # --- Milestone 5: Build a simple Streamlit app to input comments and show classifications.

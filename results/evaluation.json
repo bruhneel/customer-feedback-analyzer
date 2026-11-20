@@ -1,0 +1,783 @@
+{
+  "seed": 42,
+  "label_order": [
+    "product_issue",
+    "staff_praise",
+    "pricing",
+    "delivery_or_stock",
+    "store_experience"
+  ],
+  "test_count": 40,
+  "test_group_count": 10,
+  "training_majority": "product_issue",
+  "models": {
+    "DistilGPT2": {
+      "accuracy": 0.675,
+      "per_class": {
+        "product_issue": {
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1-score": 0.8,
+          "support": 8.0
+        },
+        "staff_praise": {
+          "precision": 0.6666666666666666,
+          "recall": 0.75,
+          "f1-score": 0.7058823529411765,
+          "support": 8.0
+        },
+        "pricing": {
+          "precision": 0.875,
+          "recall": 0.875,
+          "f1-score": 0.875,
+          "support": 8.0
+        },
+        "delivery_or_stock": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1-score": 0.6666666666666666,
+          "support": 8.0
+        },
+        "store_experience": {
+          "precision": 0.2857142857142857,
+          "recall": 0.25,
+          "f1-score": 0.26666666666666666,
+          "support": 8.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          6,
+          0,
+          0,
+          2
+        ],
+        [
+          1,
+          0,
+          7,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          4,
+          3
+        ],
+        [
+          3,
+          3,
+          0,
+          0,
+          2
+        ]
+      ]
+    },
+    "Training majority": {
+      "accuracy": 0.2,
+      "per_class": {
+        "product_issue": {
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1-score": 0.3333333333333333,
+          "support": 8.0
+        },
+        "staff_praise": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "pricing": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "delivery_or_stock": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        },
+        "store_experience": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 8.0
+        }
+      },
+      "confusion_matrix": [
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "examples": [
+    {
+      "comment": "The strap split the first time I put anything in the bag.",
+      "category": "product_issue",
+      "confidence": 0.9999998807907104,
+      "scores": {
+        "product_issue": 0.9999998807907104,
+        "staff_praise": 3.956534821991653e-10,
+        "pricing": 2.1163037988713995e-09,
+        "delivery_or_stock": 3.869635989417475e-08,
+        "store_experience": 9.780058718433793e-08
+      }
+    },
+    {
+      "comment": "The cashier was brilliant and went back to find the right size for me.",
+      "category": "staff_praise",
+      "confidence": 1.0,
+      "scores": {
+        "product_issue": 1.5199948938393604e-11,
+        "staff_praise": 1.0,
+        "pricing": 5.764987931478061e-10,
+        "delivery_or_stock": 9.138392820240426e-11,
+        "store_experience": 1.8194197259902012e-09
+      }
+    },
+    {
+      "comment": "I was charged twice even though I only bought one bowl.",
+      "category": "pricing",
+      "confidence": 0.9072564840316772,
+      "scores": {
+        "product_issue": 0.04763009026646614,
+        "staff_praise": 0.0018100208835676312,
+        "pricing": 0.9072564840316772,
+        "delivery_or_stock": 0.03955608606338501,
+        "store_experience": 0.003747279290109873
+      }
+    },
+    {
+      "comment": "The tracking says delivered and there is no box anywhere.",
+      "category": "delivery_or_stock",
+      "confidence": 1.0,
+      "scores": {
+        "product_issue": 1.8449922145613584e-10,
+        "staff_praise": 1.153490145197264e-14,
+        "pricing": 3.616657212428265e-13,
+        "delivery_or_stock": 1.0,
+        "store_experience": 5.510927714169611e-09
+      }
+    },
+    {
+      "comment": "The shop was so crowded I couldn't get to the tills.",
+      "category": "store_experience",
+      "confidence": 0.9999992847442627,
+      "scores": {
+        "product_issue": 4.438757628122403e-08,
+        "staff_praise": 6.674281962659734e-07,
+        "pricing": 5.91571625019327e-10,
+        "delivery_or_stock": 2.5218639621016337e-08,
+        "store_experience": 0.9999992847442627
+      }
+    }
+  ],
+  "test_predictions": [
+    {
+      "comment": "The fitting rooms were noticeably dirty. There was a pile of old tags on the floor.",
+      "group": "store_experience-03",
+      "actual": "store_experience",
+      "category": "store_experience",
+      "confidence": 0.5902913808822632,
+      "scores": {
+        "product_issue": 0.40629565715789795,
+        "staff_praise": 0.0031990392599254847,
+        "pricing": 5.1322210481430375e-08,
+        "delivery_or_stock": 0.00021387958258856088,
+        "store_experience": 0.5902913808822632
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the kettle cost more at the register than on the shelf ??",
+      "group": "pricing-03",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.9992714524269104,
+      "scores": {
+        "product_issue": 0.0007263585575856268,
+        "staff_praise": 2.964481785050488e-11,
+        "pricing": 0.9992714524269104,
+        "delivery_or_stock": 1.8305190678802319e-06,
+        "store_experience": 4.595764266923652e-07
+      }
+    },
+    {
+      "comment": "The moisturizer arrived sealed but smelled rancid. I did not want to use it.",
+      "group": "product_issue-09",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999998807907104,
+      "scores": {
+        "product_issue": 0.9999998807907104,
+        "staff_praise": 5.1797745780068905e-12,
+        "pricing": 3.423939187729985e-10,
+        "delivery_or_stock": 1.3143593768916162e-08,
+        "store_experience": 1.7513231398424978e-07
+      }
+    },
+    {
+      "comment": "Quick feedback: the kettle cost more at the register than on the shelf!",
+      "group": "pricing-03",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.9999529123306274,
+      "scores": {
+        "product_issue": 4.6726796426810324e-05,
+        "staff_praise": 1.1467945733659168e-12,
+        "pricing": 0.9999529123306274,
+        "delivery_or_stock": 2.1963134599900513e-07,
+        "store_experience": 1.1815544809223866e-07
+      }
+    },
+    {
+      "comment": "It showed plenty available when I paid. Main thing: the website cancelled my order because the size sold out.",
+      "group": "delivery_or_stock-05",
+      "actual": "delivery_or_stock",
+      "category": "pricing",
+      "confidence": 0.8512140512466431,
+      "scores": {
+        "product_issue": 1.9929228074033745e-05,
+        "staff_praise": 4.686067768489011e-06,
+        "pricing": 0.8512140512466431,
+        "delivery_or_stock": 0.04431276023387909,
+        "store_experience": 0.10444854944944382
+      }
+    },
+    {
+      "comment": "The price is hard to justify for such a tiny refill. The larger pack actually works out cheaper.",
+      "group": "pricing-06",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.8547192811965942,
+      "scores": {
+        "product_issue": 3.730653043021448e-05,
+        "staff_praise": 3.9674956653357185e-09,
+        "pricing": 0.8547192811965942,
+        "delivery_or_stock": 0.14524345099925995,
+        "store_experience": 1.5018363441754445e-08
+      }
+    },
+    {
+      "comment": "I left feeling heard. Main thing: the returns clerk went out of their way to explain my options.",
+      "group": "staff_praise-03",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.9997866749763489,
+      "scores": {
+        "product_issue": 2.7773552346843644e-09,
+        "staff_praise": 0.9997866749763489,
+        "pricing": 1.4324379182806268e-10,
+        "delivery_or_stock": 5.7064753491431475e-05,
+        "store_experience": 0.00015618806355632842
+      }
+    },
+    {
+      "comment": "Quick feedback: the returns clerk went out of their way to explain my options!",
+      "group": "staff_praise-03",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.9982642531394958,
+      "scores": {
+        "product_issue": 3.834818329551126e-08,
+        "staff_praise": 0.9982642531394958,
+        "pricing": 6.521497231126716e-10,
+        "delivery_or_stock": 2.8374004614306614e-05,
+        "store_experience": 0.0017073710914701223
+      }
+    },
+    {
+      "comment": "There was a pile of old tags on the floor. Main thing: the fitting rooms were noticeably dirty.",
+      "group": "store_experience-03",
+      "actual": "store_experience",
+      "category": "store_experience",
+      "confidence": 0.9975634813308716,
+      "scores": {
+        "product_issue": 0.00127970811445266,
+        "staff_praise": 0.0009864328894764185,
+        "pricing": 2.7428164628418017e-08,
+        "delivery_or_stock": 0.00017036547069437802,
+        "store_experience": 0.9975634813308716
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the fitting rooms were noticeably dirty ??",
+      "group": "store_experience-03",
+      "actual": "store_experience",
+      "category": "product_issue",
+      "confidence": 0.9103739261627197,
+      "scores": {
+        "product_issue": 0.9103739261627197,
+        "staff_praise": 0.00028638605726882815,
+        "pricing": 8.821187336138792e-09,
+        "delivery_or_stock": 1.5778670785948634e-05,
+        "store_experience": 0.08932387083768845
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the price is hard to justify for such a tiny refill ??",
+      "group": "pricing-06",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.9639735817909241,
+      "scores": {
+        "product_issue": 5.502628937392728e-06,
+        "staff_praise": 4.821657295650539e-09,
+        "pricing": 0.9639735817909241,
+        "delivery_or_stock": 0.036020904779434204,
+        "store_experience": 6.948141173523936e-09
+      }
+    },
+    {
+      "comment": "The shelf label and receipt don't match. Main thing: the kettle cost more at the register than on the shelf.",
+      "group": "pricing-03",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.9947720170021057,
+      "scores": {
+        "product_issue": 0.005012796260416508,
+        "staff_praise": 4.433557340699501e-11,
+        "pricing": 0.9947720170021057,
+        "delivery_or_stock": 0.00018572277622297406,
+        "store_experience": 2.9508724765037186e-05
+      }
+    },
+    {
+      "comment": "I did not want to use it. Main thing: the moisturizer arrived sealed but smelled rancid.",
+      "group": "product_issue-09",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999990463256836,
+      "scores": {
+        "product_issue": 0.9999990463256836,
+        "staff_praise": 5.7437279758765225e-12,
+        "pricing": 4.718074819720641e-10,
+        "delivery_or_stock": 2.7460029627945914e-07,
+        "store_experience": 6.622845489800966e-07
+      }
+    },
+    {
+      "comment": "The expedited package took longer than regular shipping. I paid the upgrade to get it before the weekend.",
+      "group": "delivery_or_stock-08",
+      "actual": "delivery_or_stock",
+      "category": "delivery_or_stock",
+      "confidence": 0.9897139072418213,
+      "scores": {
+        "product_issue": 9.789642945179367e-07,
+        "staff_praise": 1.8792697953351478e-10,
+        "pricing": 0.010282203555107117,
+        "delivery_or_stock": 0.9897139072418213,
+        "store_experience": 2.9868247111153323e-06
+      }
+    },
+    {
+      "comment": "The larger pack actually works out cheaper. Main thing: the price is hard to justify for such a tiny refill.",
+      "group": "pricing-06",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.7341729402542114,
+      "scores": {
+        "product_issue": 2.2537403765454656e-06,
+        "staff_praise": 2.3726149933622764e-09,
+        "pricing": 0.7341729402542114,
+        "delivery_or_stock": 0.2658247649669647,
+        "store_experience": 9.14240150251544e-09
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the website cancelled my order because the size sold out ??",
+      "group": "delivery_or_stock-05",
+      "actual": "delivery_or_stock",
+      "category": "store_experience",
+      "confidence": 0.9289599657058716,
+      "scores": {
+        "product_issue": 7.456703315256163e-05,
+        "staff_praise": 5.628609187624534e-07,
+        "pricing": 0.06088896468281746,
+        "delivery_or_stock": 0.010075988247990608,
+        "store_experience": 0.9289599657058716
+      }
+    },
+    {
+      "comment": "Quick feedback: the team at the register handled a mix-up without blaming anyone!",
+      "group": "staff_praise-10",
+      "actual": "staff_praise",
+      "category": "store_experience",
+      "confidence": 0.9571624398231506,
+      "scores": {
+        "product_issue": 6.594793376279995e-05,
+        "staff_praise": 0.04265777766704559,
+        "pricing": 5.3639266639482486e-11,
+        "delivery_or_stock": 0.00011385048856027424,
+        "store_experience": 0.9571624398231506
+      }
+    },
+    {
+      "comment": "Quick feedback: the moisturizer arrived sealed but smelled rancid!",
+      "group": "product_issue-09",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999991655349731,
+      "scores": {
+        "product_issue": 0.9999991655349731,
+        "staff_praise": 6.39655385950566e-12,
+        "pricing": 6.635303417823479e-10,
+        "delivery_or_stock": 6.485609560513694e-08,
+        "store_experience": 6.657091944362037e-07
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the moisturizer arrived sealed but smelled rancid ??",
+      "group": "product_issue-09",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999998807907104,
+      "scores": {
+        "product_issue": 0.9999998807907104,
+        "staff_praise": 5.822755038548122e-12,
+        "pricing": 7.084025588355303e-10,
+        "delivery_or_stock": 1.3792455177963348e-08,
+        "store_experience": 1.2803474191969144e-07
+      }
+    },
+    {
+      "comment": "Quick feedback: the fitting rooms were noticeably dirty!",
+      "group": "store_experience-03",
+      "actual": "store_experience",
+      "category": "product_issue",
+      "confidence": 0.9376323223114014,
+      "scores": {
+        "product_issue": 0.9376323223114014,
+        "staff_praise": 5.551801950787194e-05,
+        "pricing": 1.6798060720191188e-09,
+        "delivery_or_stock": 1.023577442538226e-05,
+        "store_experience": 0.06230197846889496
+      }
+    },
+    {
+      "comment": "The zipper on the daypack came apart. Only used it for the morning commute.",
+      "group": "product_issue-03",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999974966049194,
+      "scores": {
+        "product_issue": 0.9999974966049194,
+        "staff_praise": 8.618228743498269e-13,
+        "pricing": 5.239945144452918e-10,
+        "delivery_or_stock": 2.082133050862467e-06,
+        "store_experience": 4.1912070969374327e-07
+      }
+    },
+    {
+      "comment": "I paid the upgrade to get it before the weekend. Main thing: the expedited package took longer than regular shipping.",
+      "group": "delivery_or_stock-08",
+      "actual": "delivery_or_stock",
+      "category": "delivery_or_stock",
+      "confidence": 0.98195481300354,
+      "scores": {
+        "product_issue": 7.855846888560336e-07,
+        "staff_praise": 1.8379500144050098e-09,
+        "pricing": 0.018041614443063736,
+        "delivery_or_stock": 0.98195481300354,
+        "store_experience": 2.8233282591827447e-06
+      }
+    },
+    {
+      "comment": "The kettle cost more at the register than on the shelf. The shelf label and receipt don't match.",
+      "group": "pricing-03",
+      "actual": "pricing",
+      "category": "product_issue",
+      "confidence": 0.8155409097671509,
+      "scores": {
+        "product_issue": 0.8155409097671509,
+        "staff_praise": 5.028002458828951e-10,
+        "pricing": 0.1828499138355255,
+        "delivery_or_stock": 0.000602776650339365,
+        "store_experience": 0.0010064694797620177
+      }
+    },
+    {
+      "comment": "Quick feedback: the zipper on the daypack came apart!",
+      "group": "product_issue-03",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999254941940308,
+      "scores": {
+        "product_issue": 0.9999254941940308,
+        "staff_praise": 2.07491350490141e-11,
+        "pricing": 8.236809456718674e-09,
+        "delivery_or_stock": 6.180498166941106e-05,
+        "store_experience": 1.2768296983267646e-05
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the zipper on the daypack came apart ??",
+      "group": "product_issue-03",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.9999774694442749,
+      "scores": {
+        "product_issue": 0.9999774694442749,
+        "staff_praise": 4.1727052368933926e-11,
+        "pricing": 1.4717326912716544e-08,
+        "delivery_or_stock": 1.3456903616315685e-05,
+        "store_experience": 9.103103366214782e-06
+      }
+    },
+    {
+      "comment": "Quick feedback: the department signs pointed in opposite directions!",
+      "group": "store_experience-04",
+      "actual": "store_experience",
+      "category": "staff_praise",
+      "confidence": 0.9799041748046875,
+      "scores": {
+        "product_issue": 1.8145583169371093e-07,
+        "staff_praise": 0.9799041748046875,
+        "pricing": 1.2797119267049517e-11,
+        "delivery_or_stock": 8.09202992968494e-06,
+        "store_experience": 0.020087601616978645
+      }
+    },
+    {
+      "comment": "Quick feedback: the expedited package took longer than regular shipping!",
+      "group": "delivery_or_stock-08",
+      "actual": "delivery_or_stock",
+      "category": "delivery_or_stock",
+      "confidence": 0.9998452663421631,
+      "scores": {
+        "product_issue": 1.842193000811676e-06,
+        "staff_praise": 6.218672798929958e-11,
+        "pricing": 0.00014311607810668647,
+        "delivery_or_stock": 0.9998452663421631,
+        "store_experience": 9.735530511534307e-06
+      }
+    },
+    {
+      "comment": "Really professional. Main thing: the team at the register handled a mix-up without blaming anyone.",
+      "group": "staff_praise-10",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.9987320303916931,
+      "scores": {
+        "product_issue": 1.970505945791956e-05,
+        "staff_praise": 0.9987320303916931,
+        "pricing": 9.679370638338014e-10,
+        "delivery_or_stock": 1.3075466540612979e-06,
+        "store_experience": 0.0012469056528061628
+      }
+    },
+    {
+      "comment": "Only used it for the morning commute. Main thing: the zipper on the daypack came apart.",
+      "group": "product_issue-03",
+      "actual": "product_issue",
+      "category": "product_issue",
+      "confidence": 0.999570906162262,
+      "scores": {
+        "product_issue": 0.999570906162262,
+        "staff_praise": 4.1892510294072594e-11,
+        "pricing": 1.7801269791561936e-08,
+        "delivery_or_stock": 0.000390248722396791,
+        "store_experience": 3.890015068463981e-05
+      }
+    },
+    {
+      "comment": "The department signs pointed in opposite directions. I spent ten minutes trying to find cookware.",
+      "group": "store_experience-04",
+      "actual": "store_experience",
+      "category": "staff_praise",
+      "confidence": 0.5259681940078735,
+      "scores": {
+        "product_issue": 0.39233630895614624,
+        "staff_praise": 0.5259681940078735,
+        "pricing": 2.7126839441393713e-08,
+        "delivery_or_stock": 0.005010707303881645,
+        "store_experience": 0.07668481022119522
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the department signs pointed in opposite directions ??",
+      "group": "store_experience-04",
+      "actual": "store_experience",
+      "category": "staff_praise",
+      "confidence": 0.7447267174720764,
+      "scores": {
+        "product_issue": 5.172331384528661e-06,
+        "staff_praise": 0.7447267174720764,
+        "pricing": 9.466789331613601e-12,
+        "delivery_or_stock": 0.0001047382247634232,
+        "store_experience": 0.2551632821559906
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the team at the register handled a mix-up without blaming anyone ??",
+      "group": "staff_praise-10",
+      "actual": "staff_praise",
+      "category": "store_experience",
+      "confidence": 0.615401566028595,
+      "scores": {
+        "product_issue": 0.001961320172995329,
+        "staff_praise": 0.3825899362564087,
+        "pricing": 1.551834993840373e-09,
+        "delivery_or_stock": 4.7213547077262774e-05,
+        "store_experience": 0.615401566028595
+      }
+    },
+    {
+      "comment": "Quick feedback: the website cancelled my order because the size sold out!",
+      "group": "delivery_or_stock-05",
+      "actual": "delivery_or_stock",
+      "category": "store_experience",
+      "confidence": 0.9523305296897888,
+      "scores": {
+        "product_issue": 4.703375088865869e-05,
+        "staff_praise": 7.757708431199717e-08,
+        "pricing": 0.0394398532807827,
+        "delivery_or_stock": 0.008182580582797527,
+        "store_experience": 0.9523305296897888
+      }
+    },
+    {
+      "comment": "Quick feedback: the price is hard to justify for such a tiny refill!",
+      "group": "pricing-06",
+      "actual": "pricing",
+      "category": "pricing",
+      "confidence": 0.6820245981216431,
+      "scores": {
+        "product_issue": 3.404505696380511e-05,
+        "staff_praise": 7.685573066851248e-09,
+        "pricing": 0.6820245981216431,
+        "delivery_or_stock": 0.3179413378238678,
+        "store_experience": 2.666835996478767e-08
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the returns clerk went out of their way to explain my options ??",
+      "group": "staff_praise-03",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.9943557977676392,
+      "scores": {
+        "product_issue": 5.68852044580126e-07,
+        "staff_praise": 0.9943557977676392,
+        "pricing": 2.468555582169074e-09,
+        "delivery_or_stock": 0.000182404721272178,
+        "store_experience": 0.0054612248204648495
+      }
+    },
+    {
+      "comment": "idk if anyone else noticed but the expedited package took longer than regular shipping ??",
+      "group": "delivery_or_stock-08",
+      "actual": "delivery_or_stock",
+      "category": "delivery_or_stock",
+      "confidence": 0.9996722936630249,
+      "scores": {
+        "product_issue": 5.282922302285442e-06,
+        "staff_praise": 2.1725400645156157e-10,
+        "pricing": 0.00030874816002324224,
+        "delivery_or_stock": 0.9996722936630249,
+        "store_experience": 1.3652559573529288e-05
+      }
+    },
+    {
+      "comment": "The returns clerk went out of their way to explain my options. I left feeling heard.",
+      "group": "staff_praise-03",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.9997217059135437,
+      "scores": {
+        "product_issue": 1.3254619624092356e-08,
+        "staff_praise": 0.9997217059135437,
+        "pricing": 4.0395151112981864e-10,
+        "delivery_or_stock": 4.213471129332902e-06,
+        "store_experience": 0.0002741049393080175
+      }
+    },
+    {
+      "comment": "The website cancelled my order because the size sold out. It showed plenty available when I paid.",
+      "group": "delivery_or_stock-05",
+      "actual": "delivery_or_stock",
+      "category": "store_experience",
+      "confidence": 0.5720054507255554,
+      "scores": {
+        "product_issue": 7.169944728957489e-05,
+        "staff_praise": 4.5034997242510144e-07,
+        "pricing": 0.39163938164711,
+        "delivery_or_stock": 0.03628307208418846,
+        "store_experience": 0.5720054507255554
+      }
+    },
+    {
+      "comment": "I spent ten minutes trying to find cookware. Main thing: the department signs pointed in opposite directions.",
+      "group": "store_experience-04",
+      "actual": "store_experience",
+      "category": "product_issue",
+      "confidence": 0.4302980899810791,
+      "scores": {
+        "product_issue": 0.4302980899810791,
+        "staff_praise": 0.34892892837524414,
+        "pricing": 9.509540710439524e-09,
+        "delivery_or_stock": 0.004048630129545927,
+        "store_experience": 0.21672433614730835
+      }
+    },
+    {
+      "comment": "The team at the register handled a mix-up without blaming anyone. Really professional.",
+      "group": "staff_praise-10",
+      "actual": "staff_praise",
+      "category": "staff_praise",
+      "confidence": 0.7934694290161133,
+      "scores": {
+        "product_issue": 5.410774247138761e-05,
+        "staff_praise": 0.7934694290161133,
+        "pricing": 1.059779070056166e-10,
+        "delivery_or_stock": 2.6955838620779105e-05,
+        "store_experience": 0.2064494788646698
+      }
+    }
+  ]
+}
