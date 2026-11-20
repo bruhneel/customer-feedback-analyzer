@@ -32,3 +32,9 @@ def load_feedback(path: Path = Path("data/feedback.jsonl")) -> list["Feedback"]:
 
     return [Feedback(**json.loads(line)) for line in path.read_text(encoding="utf-8").splitlines()
             if line.strip()]
+
+
+def save_report(path: Path, data: dict) -> None:
+    """Write a machine-readable training or evaluation report."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

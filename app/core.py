@@ -117,10 +117,52 @@ def extend_categories(model: "PreTrainedModel", tokenizer: "PreTrainedTokenizerB
     return category_token_ids(tokenizer)
 
 
-# --- Milestone 3: Fine-tune the model using the Hugging Face Trainer.
-# Hint: Utilize the Hugging Face Trainer class as demonstrated in the drill.
-def milestone_3():  # TODO(milestone 3)
-    raise NotImplementedError("TODO(milestone 3)")
+def prompt_ids(tokenizer: "PreTrainedTokenizerBase", comment: str, max_length: int) -> list[int]:
+    """Truncate the comment while preserving the category cue and two target slots."""
+    prompt = format_prompt(comment)
+    prefix = tokenizer.encode("Feedback:", add_special_tokens=False)
+    suffix = tokenizer.encode("\nCategory:", add_special_tokens=False)
+    budget = max_length - len(prefix) - len(suffix) - 2
+    if budget < 1:
+        raise ValueError("Context limit is too short for the feedback template.")
+    text = prompt[len("Feedback:"):-len("\nCategory:")]
+    if len(text) > 12000:
+        text = text[:9000] + " " + text[-3000:]
+    body = tokenizer.encode(text, add_special_tokens=False)
+    if len(body) > budget:
+        tail = budget // 4
+        body = body[:budget - tail] + (body[-tail:] if tail else [])
+    return [*prefix, *body, *suffix]
+
+
+def training_example(
+    tokenizer: "PreTrainedTokenizerBase", row: Feedback, ids: dict[str, int], max_length: int
+) -> dict[str, list[int]]:
+    """Apply cross-entropy only to the category and EOS, including on padded batches."""
+    prefix = prompt_ids(tokenizer, row.comment, max_length)
+    target = [ids[row.label], tokenizer.eos_token_id]
+    return {"input_ids": prefix + target, "labels": [-100] * len(prefix) + target}
+
+
+@dataclass(frozen=True)
+class FeedbackCollator:
+    """Right-pad a batch without supervising pad positions."""
+
+    pad_id: int
+
+    def __call__(self, rows: Sequence[dict[str, list[int]]]) -> dict:
+        import torch
+
+        length = max(len(row["input_ids"]) for row in rows)
+        ids, labels, masks = [], [], []
+        for row in rows:
+            count = len(row["input_ids"])
+            padding = length - count
+            ids.append(row["input_ids"] + [self.pad_id] * padding)
+            labels.append(row["labels"] + [-100] * padding)
+            masks.append([1] * count + [0] * padding)
+        return {"input_ids": torch.tensor(ids), "labels": torch.tensor(labels),
+                "attention_mask": torch.tensor(masks)}
 
 
 # --- Milestone 4: Implement an inference function to classify new feedback.

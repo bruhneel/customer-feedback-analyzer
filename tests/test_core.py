@@ -40,10 +40,29 @@ def test_category_tokens_resize_and_preserve_inputs(tiny_pair):
     assert tokenizer.pad_token_id == model.config.pad_token_id == tokenizer.eos_token_id
 
 
-# Milestone 3: Fine-tune the model using the Hugging Face Trainer.
-@pytest.mark.skip(reason="remove this line when you start milestone 3")
-def test_milestone_3():
-    raise NotImplementedError("write the test for milestone 3")
+def test_trainer_overfits_tiny_model(tiny_pair, tmp_path):
+    import math
+
+    from app.core import Feedback, FeedbackCollator, extend_categories, training_example
+    from app.train import make_trainer
+
+    model, tokenizer = tiny_pair
+    ids = extend_categories(model, tokenizer)
+    rows = [
+        training_example(tokenizer, Feedback("Broken zipper", "product_issue", "a"), ids, 24),
+        training_example(tokenizer, Feedback("Staff helped me", "staff_praise", "b"), ids, 24),
+    ]
+    for row in rows:
+        assert row["labels"][:-2] == [-100] * (len(row["input_ids"]) - 2)
+        assert row["labels"][-2:] == row["input_ids"][-2:]
+    batch = FeedbackCollator(tokenizer.pad_token_id)(rows)
+    assert (batch["labels"][batch["attention_mask"] == 0] == -100).all()
+    trainer = make_trainer(model, tokenizer, rows * 4, rows, tmp_path, max_steps=32,
+                           batch_size=4, learning_rate=0.02, quiet=True)
+    initial = trainer.evaluate()["eval_loss"]
+    train_loss = trainer.train().training_loss
+    final = trainer.evaluate()["eval_loss"]
+    assert math.isfinite(train_loss) and math.isfinite(final) and final < initial * 0.6
 
 
 # Milestone 4: Implement an inference function to classify new feedback.
