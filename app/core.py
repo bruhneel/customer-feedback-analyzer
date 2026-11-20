@@ -3,6 +3,10 @@ from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
 import random
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from transformers import PreTrainedModel, PreTrainedTokenizerBase
 
 CATEGORIES = {
     "product_issue": "A product is defective, damaged, incomplete, or performs poorly.",
@@ -74,10 +78,43 @@ def split_feedback(rows: Sequence[Feedback], seed: int = 42) -> dict[str, list[F
     return splits
 
 
-# --- Milestone 2: Extend GPT-2 tokenizer and model with new category tokens.
-# Hint: Apply the tokenizer extension methods shown in the drill.
-def milestone_2():  # TODO(milestone 2)
-    raise NotImplementedError("TODO(milestone 2)")
+def category_token_ids(tokenizer: "PreTrainedTokenizerBase") -> dict[str, int]:
+    """Resolve each category to a distinct, single special-token ID."""
+    result = {}
+    for label in CATEGORIES:
+        token = category_token(label)
+        ids = tokenizer.encode(token, add_special_tokens=False)
+        if token not in tokenizer.all_special_tokens or len(ids) != 1:
+            raise ValueError(f"Tokenizer is missing the special category token {token}.")
+        result[label] = ids[0]
+    if len(set(result.values())) != len(result):
+        raise ValueError("Category tokens must have distinct IDs.")
+    return result
+
+
+def extend_categories(model: "PreTrainedModel", tokenizer: "PreTrainedTokenizerBase") -> dict[str, int]:
+    """Register category tokens and initialize new tied embeddings at the old mean."""
+    import torch
+
+    initial_size = model.get_input_embeddings().num_embeddings
+    if initial_size != len(tokenizer):
+        raise ValueError("The base model and tokenizer vocabularies must match.")
+    tokenizer.add_special_tokens(
+        {"additional_special_tokens": [category_token(label) for label in CATEGORIES]},
+        replace_additional_special_tokens=False,
+    )
+    if tokenizer.eos_token_id is None:
+        raise ValueError("A GPT-2 tokenizer must define an end token.")
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    if len(tokenizer) != initial_size:
+        with torch.no_grad():
+            initial_mean = model.get_input_embeddings().weight.mean(dim=0)
+            model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
+            model.get_input_embeddings().weight[initial_size:].copy_(initial_mean)
+            model.tie_weights()
+    model.config.pad_token_id = tokenizer.pad_token_id
+    return category_token_ids(tokenizer)
 
 
 # --- Milestone 3: Fine-tune the model using the Hugging Face Trainer.

@@ -33,3 +33,15 @@ def chat(messages: list[dict], **options) -> str:
                    json={"model": model, "messages": messages, **options})
     r.raise_for_status()
     return r.json()["choices"][0]["message"]["content"]
+
+
+DEFAULT_BASE = "distilbert/distilgpt2"
+
+
+def load_base(model_name: str = DEFAULT_BASE):
+    """Load public GPT-2 weights and tokenizer through the local Hub cache."""
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name, token=False)
+    model = AutoModelForCausalLM.from_pretrained(model_name, token=False, use_safetensors=True)
+    return model, tokenizer

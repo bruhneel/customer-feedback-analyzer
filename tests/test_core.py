@@ -19,10 +19,25 @@ def test_dataset_categories_format_and_stratified_groups():
     assert sum(len({row.comment for row in part}) for part in splits.values()) == len(rows)
 
 
-# Milestone 2: Extend GPT-2 tokenizer and model with new category tokens.
-@pytest.mark.skip(reason="remove this line when you start milestone 2")
-def test_milestone_2():
-    raise NotImplementedError("write the test for milestone 2")
+def test_category_tokens_resize_and_preserve_inputs(tiny_pair):
+    import torch
+
+    from app.core import CATEGORIES, category_token, extend_categories
+
+    model, tokenizer = tiny_pair
+    old_vocab = tokenizer.get_vocab()
+    old_weights = model.get_input_embeddings().weight.detach().clone()
+    ids = extend_categories(model, tokenizer)
+    assert list(ids) == list(CATEGORIES) and len(set(ids.values())) == len(CATEGORIES)
+    assert all(tokenizer.encode(category_token(label), add_special_tokens=False) == [index]
+               for label, index in ids.items())
+    assert all(tokenizer.convert_tokens_to_ids(word) == index for word, index in old_vocab.items())
+    weight = model.get_input_embeddings().weight
+    assert weight.shape[0] == len(tokenizer) == len(old_vocab) + len(CATEGORIES)
+    torch.testing.assert_close(weight[:len(old_vocab)], old_weights, rtol=0, atol=0)
+    torch.testing.assert_close(weight[len(old_vocab):], old_weights.mean(0).expand(len(ids), -1))
+    assert weight is model.get_output_embeddings().weight
+    assert tokenizer.pad_token_id == model.config.pad_token_id == tokenizer.eos_token_id
 
 
 # Milestone 3: Fine-tune the model using the Hugging Face Trainer.
